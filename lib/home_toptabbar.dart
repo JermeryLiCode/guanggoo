@@ -2,9 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'homepages/defaultsort_page.dart';
-import 'homepages/newesttopic_page.dart';
-import 'homepages/essentialtheme_page.dart';
-import 'homepages/interestnode_page.dart';
+
 class HomeTopIndexPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -38,10 +36,10 @@ class HomeTopIndexPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            DefaultSortPage(key: Key('1'),sort:Sort.defaultSort),
-            DefaultSortPage(key: Key('2'),sort:Sort.topicSort),
-            DefaultSortPage(key: Key('3'),sort:Sort.themeSort),
-            DefaultSortPage(key: Key('4'),sort:Sort.nodeSort)]
+            DefaultSortPage(key: Key('1'),sort: Sort.defaultSort),
+            DefaultSortPage(key: Key('2'),sort: Sort.topicSort),
+            DefaultSortPage(key: Key('3'),sort: Sort.themeSort),
+            DefaultSortPage(key: Key('4'),sort: Sort.nodeSort)]
         ),
       ),
     );

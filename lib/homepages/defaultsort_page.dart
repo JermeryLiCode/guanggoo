@@ -66,41 +66,45 @@ class FriendsState extends State<DefaultSortPage> {
       }
       // 发起请求获取首页的html数据
       Response res = await dio.get(url);
+      var document = parse(res.data.toString());
       // 解析标签的值
-      List classes = parse(res.data).getElementsByClassName('topic-item');
-      for(var object in classes) {
-        var topicItemElement = object.querySelector('img');
-        String? topicItemImageSrc = topicItemElement.attributes!['src'];
+      List<dom.Element> items = document.getElementsByClassName('topic-item');
+      items.forEach((element) {
+        String topicItemImageSrc = element.getElementsByTagName('img').first.attributes['src'].toString();
 
-        var titleElements = object.getElementsByClassName("title");
-        String titleText = _matchString(titleElements.first.text);
-        var titleElement = object.querySelector("a");
-        String? titleHref = titleElement.attributes!['href'];
+        List<dom.Element> titleElements = element.getElementsByClassName('title');
+        String titleText = _matchString(titleElements.first.text.toString());
+        String titleHref = element.getElementsByTagName('a').first.attributes['href'].toString();
 
-        var metaElements = object.getElementsByClassName("node");
-        var nodeText =  _matchString(metaElements.first.text);
+        List<dom.Element> metaElements = element.getElementsByClassName('node');
+        String nodeText = _matchString(metaElements.first.text.toString());
 
-        var userNameElements = object.getElementsByClassName("username");
-        var userNameText = _matchString(userNameElements.first.text);
-        var userNameElement =  object.querySelector("a");
-        String? userNameHref = userNameElement.attributes!['href'];
+        List<dom.Element> userNameElements = element.getElementsByClassName('username');
+        String userNameText = _matchString(userNameElements.first.text.toString());
+        String userNameHref = element.getElementsByTagName('a').first.attributes['href'].toString();
 
-        var lastTouchedElements = object.getElementsByClassName("last-touched");
-        var lastTouchedText = _matchString(lastTouchedElements.first.text);
+        List<dom.Element> lastTouchedElements = element.getElementsByClassName('last-touched');
+        String lastTouchedText = _matchString(lastTouchedElements.first.text.toString());
 
-        var lastReplyElements = object.getElementsByClassName("last-reply-username");
-        String lastReplyText =  _matchString(lastReplyElements.first.text);
-        var lastReplyElement = object.querySelector("a");
-        String? lastReplyHref = lastReplyElement.attributes!['href'];
+        List<dom.Element> lastReplyElements = element.getElementsByClassName('last-reply-username');
+        String lastReplyText = "";
+        if(lastReplyElements.length != 0) {
+          lastReplyText = _matchString(lastReplyElements.first.text.toString());
+        }
+        String lastReplyHref = element.getElementsByTagName('a').first.attributes['href'].toString();
 
-        var countElements = object.getElementsByClassName("count");
-        String countText = _matchString(countElements.first.text);
+        List<dom.Element> countElements = element.getElementsByClassName('count');
+        String countText = "";
+        if(countElements.length != 0) {
+          countText = _matchString(countElements.first.text.toString());
+        }
 
-        TopicInfoModel friendsModel = new TopicInfoModel(titleText,titleHref!,nodeText,
-            topicItemImageSrc!,userNameText,userNameHref!,
-            lastReplyText,lastReplyHref!,int.parse(countText),lastTouchedText,'','','','',[]);
+        TopicInfoModel friendsModel = new TopicInfoModel(titleText,titleHref,nodeText,
+            topicItemImageSrc,userNameText,userNameHref,
+            lastReplyText,lastReplyHref,(countText.length != 0?int.parse(countText):0),lastTouchedText,'','','','',[]);
         topicList.add(friendsModel);
-      }
+      });
+
     } catch (exception) {
       print(exception.toString());
     }
